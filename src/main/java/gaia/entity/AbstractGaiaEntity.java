@@ -111,7 +111,10 @@ public abstract class AbstractGaiaEntity extends Monster {
 	public abstract float getBaseDefense();
 
 	protected float getBaseDamage(DamageSource source, float damage) {
-		return source == DamageSource.OUT_OF_WORLD ? damage : Math.min(damage, getBaseDefense());
+		if (getBaseDefense() > 0) {
+			return source == DamageSource.OUT_OF_WORLD ? damage : Math.min(damage, getBaseDefense());
+		}
+		return damage;
 	}
 
 	protected void spawnLingeringCloud(List<MobEffectInstance> effectInstances) {
@@ -211,6 +214,7 @@ public abstract class AbstractGaiaEntity extends Monster {
 					damageAttribute.setBaseValue(SharedEntityData.getAttackDamage3());
 			}
 		}
+		this.setHealth(getMaxHealth()); //Set max health since it's not done automatically when changing the attribute
 
 		if (GaiaConfig.COMMON.passiveHostileMobs.get()) {
 			this.goalSelector.removeGoal(targetPlayerGoal);
